@@ -1,4 +1,5 @@
 <script>
+	import Tier from '../components/Tier.svelte'
 </script>
 
 <svelte:head>
@@ -7,7 +8,15 @@
 </svelte:head>
 
 <section>
-
+	<Tier letter={'SSS'} />
+	<Tier letter={'S'} />
+	<Tier letter={'A'} />
+	<Tier letter={'B'} />
+	<Tier letter={'C'} />
+	<Tier letter={'D'} />
+	<Tier letter={'E'} />
+	<Tier letter={'F'} />
+	<Tier letter={'G'} />
 </section>
 
 <style>
