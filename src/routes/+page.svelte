@@ -2,13 +2,12 @@
 	import type { TierLetter } from '../domain/Tier';
 	import type { criteria, topic } from '../lib/stores';
 	import { tierLabels } from '../lib/stores';
-	import {criterias, ratings, topics} from "../lib/stores"
+	import {criterias, topics} from "../lib/stores"
 	
 	import { TIER_LETTERS } from '../domain/Tier';
 	
 	import Tier from './../components/Tier.svelte';
 	import Nav from "../components/Nav.svelte";
-	import Settings from '../components/Settings.svelte';
 	import Modal from '../components/Modal.svelte';
 	import SettingsModal from '../components/SettingsModal.svelte';
 
@@ -47,6 +46,12 @@
 		console.log("todo : remove Topic");
 	}
 
+	function removeCriteria() {
+		//TODO
+		console.log("todo : remove Criteria");
+	}
+	
+
 	function tierClassFromAverage(average: number):TierLetter {
 		const rank = TIER_LETTERS.length-1 - average
 		console.log(TIER_LETTERS[rank])
@@ -67,6 +72,16 @@
 <section>
 	<table>
 		<thead>
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				{#each criteriass as criteria (criteria.id)}
+					<td class="col-close-col"><button on:click={removeCriteria} class="close-col">x</button></td>
+				{/each}
+				<td></td>
+				<td></td>
+			</tr>
 			<tr>
 				<td class="col-close-row"></td>
 				<td class="col-tier"><button on:click={() => showModal = !showModal}>Settings</button></td>
@@ -135,7 +150,7 @@
 	.col-add-col {
 		width: 3rem; 
 	}
-	.col-close-row {
+	.col-close-row, .col-close-col{
 		max-width: 2rem;
 	}
 	.col-result {
@@ -147,6 +162,8 @@
 		border: 1px solid white;
 		padding: .5rem 1rem;
 		cursor: pointer;
+		transition: .2s ease;
+
 	}
 
 	button:hover {
@@ -157,12 +174,25 @@
 	
 
 	@media (hover: hover) {
-		.close {
+		.close, .close-col {
 			visibility: hidden;
-			color: white
+			color: red;
+			border: 1px solid red;
+			border-radius: 5px;
+			transition: .2s ease;
+		}
+
+		.close:hover, .close-col:hover {
+			color: white;
+			background-color: red;
 
 		}
+
 		.tr:hover .close {
+			visibility: visible;
+		}
+
+		.td:hover .close-col {
 			visibility: visible;
 		}
 	}
