@@ -1,14 +1,42 @@
 <script lang="ts">
-    import type { TierLetter } from "../domain/Tier";
-    export let letter: string;
-    export let tierClass: TierLetter;
-
+  import { TIER_LETTERS } from "../domain/Tier";
+  import { tierLabels } from "../lib/stores";
 </script>
 
-<div class={`tier-${tierClass}`}>{ letter }</div>
-
+<ol class="">
+  {#each TIER_LETTERS as t, i}
+    <li><input placeholder="Entrez un titre de tier : {$tierLabels[i]}" type="text" name="" id="" bind:value={$tierLabels[i]}><div class='tier-{t}'>{t}</div></li>
+  {/each}
+</ol>
 <style>
-    .tier-SSS {
+ol {
+  list-style: none;
+  padding-left: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+li {
+  flex-basis: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+li input {
+  width: 50%;
+  
+}
+
+li div {
+  width : 3rem;
+  height : 3rem;
+  background-color: black;
+  color: white;
+  text-align: center;
+  line-height: 3rem;
+}
+
+.tier-SSS {
         background-color: #FFFFFF;
         color: #ECAA00;
     }
@@ -43,13 +71,5 @@
     .tier-G {
         background-color: #2C2C2C;
         color: #D62424;
-    }
-
-    div {
-        height: 2.5rem;
-        width: 12rem;
-        line-height: 2.5rem;
-        text-align: center;
-        font-weight: bold;
     }
 </style>

@@ -1,10 +1,18 @@
 <script lang="ts">
-	import Tier from './../components/Tier.svelte';
-	import { TIER_LETTERS } from '../domain/Tier';
 	import type { TierLetter } from '../domain/Tier';
-	import Nav from "../components/Nav.svelte";
-	import {criterias, ratings, topics} from "../lib/stores"
 	import type { criteria, topic } from '../lib/stores';
+	import { tierLabels } from '../lib/stores';
+	import {criterias, ratings, topics} from "../lib/stores"
+	
+	import { TIER_LETTERS } from '../domain/Tier';
+	
+	import Tier from './../components/Tier.svelte';
+	import Nav from "../components/Nav.svelte";
+	import Settings from '../components/Settings.svelte';
+	import Modal from '../components/Modal.svelte';
+	import SettingsModal from '../components/SettingsModal.svelte';
+
+
 
 	let criteriass:criteria[] = [];
 	let topitots:topic[] = [];
@@ -20,6 +28,8 @@
 		topitots = topic;
 	});
 
+	let showModal = false;
+
 	//$: averages = ratings.subscribe(topic => topic.reduce((acc, curVal) => acc.concat(curVal), []))
 
 	function addCriteria() {
@@ -28,11 +38,18 @@
 	}
 
 	function addTopic() {
-		$topics = [...$topics,  {id: $topics.length, label: placeholderTopic, average: 0}]
+		$topics = [...$topics,  {id: $topics.length, label: placeholderTopic, average: Math.floor(Math.random()*9)}]
 	}
 
-	function rankFromRate(rate: number):TierLetter {
-		const rank = TIER_LETTERS.length-1 - rate
+
+	function removeTopic() {
+		//TODO
+		console.log("todo : remove Topic");
+	}
+
+	function tierClassFromAverage(average: number):TierLetter {
+		const rank = TIER_LETTERS.length-1 - average
+		console.log(TIER_LETTERS[rank])
 		return TIER_LETTERS[rank]
 	}
 	
@@ -52,7 +69,7 @@
 		<thead>
 			<tr>
 				<td class="col-close-row"></td>
-				<td class="col-tier"><button>Settings</button></td>
+				<td class="col-tier"><button on:click={() => showModal = !showModal}>Settings</button></td>
 				<td class="col-topic">Title</td>
 				{#each criteriass as criteria (criteria.id)}
 					<td class="col-criteria"><div contenteditable bind:innerHTML={criteria.label}>{criteria}</div></td>
@@ -64,8 +81,8 @@
 		<tbody>
 			{#each topitots as topito (topito.id)}
 			<tr class="tr">
-					<td class="col-close-row"><button class="close">x</button></td>
-					<td><Tier letter={rankFromRate(topito.average)}/></td>
+					<td class="col-close-row"><button on:click={removeTopic} class="close">x</button></td>
+					<td><Tier letter={$tierLabels[$tierLabels.length-1-topito.average]} tierClass={tierClassFromAverage(topito.average)}/></td>
 					<td class="col-topic"><div contenteditable bind:innerHTML={topito.label}>{topito.label}</div></td>
 					{#each criteriass as criteria} 
 						<td class="col-criteria"><div contenteditable></div></td>
@@ -82,6 +99,14 @@
 		</tfoot>
 	</table>
 </section>
+
+<Modal bind:showModal>
+	<h2 slot="header">
+		Paramètres
+	</h2>
+
+	<SettingsModal/>
+</Modal>
 
 <style>
 	table {
@@ -104,7 +129,6 @@
 	}
 
 	.col-criteria div {
-		border: 1px solid white;
 		padding: .5rem;
 		width: 75%;
 	}
