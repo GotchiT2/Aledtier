@@ -1,12 +1,16 @@
 <script lang="ts">
 	import Tier from './../components/Tier.svelte';
+	import { TIER_LETTERS } from '../domain/Tier';
+	import type { TierLetter } from '../domain/Tier';
 	import Nav from "../components/Nav.svelte";
-	import {criterias, topics} from "../lib/stores"
+	import {criterias, ratings, topics} from "../lib/stores"
 	import type { criteria, topic } from '../lib/stores';
 
 	let criteriass:criteria[] = [];
 	let topitots:topic[] = [];
-	const placeholder = "Replace this text"
+
+	const placeholderTopic = "Add Topic Name"
+	const placeholderCriteria = "Add Criteria Name"
 
 	$: criterias.subscribe(criteria => {
 		criteriass = criteria;
@@ -16,13 +20,20 @@
 		topitots = topic;
 	});
 
+	//$: averages = ratings.subscribe(topic => topic.reduce((acc, curVal) => acc.concat(curVal), []))
+
 	function addCriteria() {
-		$criterias = [...$criterias, {id: $criterias.length, label: placeholder}]
+		$criterias = [...$criterias, {id: $criterias.length, label: placeholderCriteria}]
 		console.log($criterias)
 	}
 
 	function addTopic() {
-		$topics = [...$topics,  {id: $topics.length, label: placeholder}]
+		$topics = [...$topics,  {id: $topics.length, label: placeholderTopic, average: 0}]
+	}
+
+	function rankFromRate(rate: number):TierLetter {
+		const rank = TIER_LETTERS.length-1 - rate
+		return TIER_LETTERS[rank]
 	}
 	
 </script>
@@ -40,8 +51,9 @@
 	<table>
 		<thead>
 			<tr>
+				<td class="col-close-row"></td>
 				<td class="col-tier"><button>Settings</button></td>
-				<td class="col-topic">title</td>
+				<td class="col-topic">Title</td>
 				{#each criteriass as criteria (criteria.id)}
 					<td class="col-criteria"><div contenteditable bind:innerHTML={criteria.label}>{criteria}</div></td>
 				{/each}
@@ -49,17 +61,17 @@
 				<td class="col-result">/10</td>
 			</tr>
 		</thead>
-
 		<tbody>
 			{#each topitots as topito (topito.id)}
-				<tr>
-					<td><Tier letter="A"/></td>
-					<td class="col-topic" ><div contenteditable bind:innerHTML={topito.label}>{topito.label}</div></td>
-					{#each criteriass as criteria}
-						<td class="col-criteria" ><div contenteditable></div></td>
+			<tr class="tr">
+					<td class="col-close-row"><button class="close">x</button></td>
+					<td><Tier letter={rankFromRate(topito.average)}/></td>
+					<td class="col-topic"><div contenteditable bind:innerHTML={topito.label}>{topito.label}</div></td>
+					{#each criteriass as criteria} 
+						<td class="col-criteria"><div contenteditable></div></td>
 					{/each}
 					<td></td>
-					<td>5</td>
+					<td>{topito.average}</td>
 				</tr>
 			{/each}
 		</tbody>
@@ -75,8 +87,10 @@
 	table {
 		text-align: center;
 	}
+
 	thead td {
-		min-width: 12rem;
+		min-width: 3rem;
+		width: 12rem;
 	}
 	.col-tier {
 		width: 12rem;
@@ -95,7 +109,10 @@
 		width: 75%;
 	}
 	.col-add-col {
-		width: 2rem; 
+		width: 3rem; 
+	}
+	.col-close-row {
+		max-width: 2rem;
 	}
 	.col-result {
 	}
@@ -111,5 +128,18 @@
 	button:hover {
 		background: white;
 		color: var(--bg-color);
+	}
+
+	
+
+	@media (hover: hover) {
+		.close {
+			visibility: hidden;
+			color: white
+
+		}
+		.tr:hover .close {
+			visibility: visible;
+		}
 	}
 </style>
