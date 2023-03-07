@@ -2,41 +2,48 @@
 	import Tier from './../components/Tier.svelte';
 	import Nav from "../components/Nav.svelte";
 	import {criterias, topics} from "../lib/stores"
+	import type { criteria, topic } from '../lib/stores';
 
-	let criteriass:string[] = [];
-	let topitots:string[] = [];
+	let criteriass:criteria[] = [];
+	let topitots:topic[] = [];
+	const placeholder = "Replace this text"
 
-	$: criterias.subscribe(value => {
-		criteriass = value;
+	$: criterias.subscribe(criteria => {
+		criteriass = criteria;
 	});
 
-	$: topics.subscribe(value => {
-		topitots = value;
+	$: topics.subscribe(topic => {
+		topitots = topic;
 	});
 
 	function addCriteria() {
-		$criterias = [...$criterias, "empty"]
+		$criterias = [...$criterias, {id: $criterias.length, label: placeholder}]
+		console.log($criterias)
 	}
 
 	function addTopic() {
-		$topics = [...$topics, "empty"]
+		$topics = [...$topics,  {id: $topics.length, label: placeholder}]
 	}
+	
 </script>
 
 <svelte:head>
 	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
+	<meta name="description" content="Tier List maker" />
 </svelte:head>
 
 <Nav/>
+
+<h1>Ma tier List !</h1>
+
 <section>
 	<table>
 		<thead>
 			<tr>
 				<td class="col-tier"><button>Settings</button></td>
 				<td class="col-topic">title</td>
-				{#each criteriass as criteria}
-					<td class="col-criteria"><div contenteditable>{criteria}</div></td>
+				{#each criteriass as criteria (criteria.id)}
+					<td class="col-criteria"><div contenteditable bind:innerHTML={criteria.label}>{criteria}</div></td>
 				{/each}
 				<td class="col-add-col"><button on:click={addCriteria}>+</button></td>
 				<td class="col-result">/10</td>
@@ -44,10 +51,10 @@
 		</thead>
 
 		<tbody>
-			{#each topitots as topito}
+			{#each topitots as topito (topito.id)}
 				<tr>
 					<td><Tier letter="A"/></td>
-					<td class="col-topic" ><div contenteditable>{topito}</div></td>
+					<td class="col-topic" ><div contenteditable bind:innerHTML={topito.label}>{topito.label}</div></td>
 					{#each criteriass as criteria}
 						<td class="col-criteria" ><div contenteditable></div></td>
 					{/each}
@@ -79,8 +86,13 @@
 	.col-criteria {
 	}
 	.col-criteria {
+		position: relative;
 	}
-	.col-criteria {
+
+	.col-criteria div {
+		border: 1px solid white;
+		padding: .5rem;
+		width: 75%;
 	}
 	.col-add-col {
 		width: 2rem; 
