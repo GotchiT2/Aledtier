@@ -65,7 +65,6 @@
 </section>
 
 <style>
-
 	table {
 		text-align: center;
 	}
@@ -89,7 +88,16 @@
 	.col-result {
 	}
 
-	
+	button {
+		background: transparent;
+		color: white;
+		border: 1px solid white;
+		padding: .5rem 1rem;
+		cursor: pointer;
+	}
 
-
+	button:hover {
+		background: white;
+		color: var(--bg-color);
+	}
 </style>
