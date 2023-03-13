@@ -3,6 +3,7 @@
         <li><a href="/">TierList</a></li>
         <li><a href="https://github.com/GotchiT2/aledtier">Docs</a></li>
         <li><a href="/ds">Design System</a></li>
+        <li><a href="/stores">Stores</a></li>
     </ol>
 </nav>
 

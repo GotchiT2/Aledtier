@@ -11,21 +11,8 @@
 	import Modal from '../components/Modal.svelte';
 	import SettingsModal from '../components/SettingsModal.svelte';
 
-
-
-	let criteriass:criteria[] = [];
-	let topitots:topic[] = [];
-
 	const placeholderTopic = "Add Topic Name"
 	const placeholderCriteria = "Add Criteria Name"
-
-	$: criterias.subscribe(criteria => {
-		criteriass = criteria;
-	});
-
-	$: topics.subscribe(topic => {
-		topitots = topic;
-	});
 
 	let showModal = false;
 
@@ -33,7 +20,6 @@
 
 	function addCriteria() {
 		$criterias = [...$criterias, {id: $criterias.length, label: placeholderCriteria}]
-		console.log($criterias)
 	}
 
 	function addTopic() {
@@ -54,7 +40,6 @@
 
 	function tierClassFromAverage(average: number):TierLetter {
 		const rank = TIER_LETTERS.length-1 - average
-		console.log(TIER_LETTERS[rank])
 		return TIER_LETTERS[rank]
 	}
 	
@@ -76,7 +61,7 @@
 				<td></td>
 				<td></td>
 				<td></td>
-				{#each criteriass as criteria (criteria.id)}
+				{#each $criterias as criteria (criteria.id)}
 					<td class="col-close-col"><button on:click={removeCriteria} class="close-col">x</button></td>
 				{/each}
 				<td></td>
@@ -86,7 +71,7 @@
 				<td class="col-close-row"></td>
 				<td class="col-tier"><button on:click={() => showModal = !showModal}>Settings</button></td>
 				<td class="col-topic">Title</td>
-				{#each criteriass as criteria (criteria.id)}
+				{#each $criterias as criteria (criteria.id)}
 					<td class="col-criteria"><div contenteditable bind:innerHTML={criteria.label}>{criteria}</div></td>
 				{/each}
 				<td class="col-add-col"><button on:click={addCriteria}>+</button></td>
@@ -94,12 +79,12 @@
 			</tr>
 		</thead>
 		<tbody>
-			{#each topitots as topito (topito.id)}
+			{#each $topics as topito (topito.id)}
 			<tr class="tr">
 					<td class="col-close-row"><button on:click={removeTopic} class="close">x</button></td>
 					<td><Tier letter={$tierLabels[$tierLabels.length-1-topito.average]} tierClass={tierClassFromAverage(topito.average)}/></td>
 					<td class="col-topic"><div contenteditable bind:innerHTML={topito.label}>{topito.label}</div></td>
-					{#each criteriass as criteria} 
+					{#each $criterias as criteria} 
 						<td class="col-criteria"><div contenteditable></div></td>
 					{/each}
 					<td></td>
