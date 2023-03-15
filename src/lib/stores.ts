@@ -29,10 +29,14 @@ function initStore(storeName: string) {
 export const criterias = writable<criteria[]>(initStore('criterias'))
 export const topics = writable<topic[]>(initStore('topics'))
 export const ratings = writable<rating[][][]>(initStore('ratings')) //[id-topic][id-criteria][id-player]
+export const averagesCriterias = writable<number[]>(initStore('averagesCriterias'))
+export const averagesTopics = writable<number[]>(initStore('averagesTopics'))
 
 saveStore(criterias, 'criterias')
 saveStore(topics, 'topics')
 saveStore(ratings, 'ratings')
+saveStore(averagesCriterias, 'averagesCriterias')
+saveStore(averagesTopics, 'averagesTopics')
 
 function saveStore(store: any, storeName: string) {
   store.subscribe((storeContent: any) => {

@@ -2,7 +2,7 @@
 	import type { TierLetter } from '../domain/Tier';
 	import type { criteria, topic } from '../lib/stores';
 	import { tierLabels } from '../lib/stores';
-	import {criterias, topics} from "../lib/stores"
+	import { criterias, topics, averagesTopics } from "../lib/stores"
 	
 	import { TIER_LETTERS } from '../domain/Tier';
 	
@@ -27,14 +27,20 @@
 	}
 
 
-	function removeTopic() {
-		//TODO
-		console.log("todo : remove Topic");
-	}
+	function removeTopic(id: number) {
+		const previousTopicsArray = [...$topics];
+		previousTopicsArray.splice(id, 1)
+		const newTopicsArray = previousTopicsArray.map((t, index) => ({...t, id: index }))
+		
+		topics.set(newTopicsArray)
+}
 
-	function removeCriteria() {
-		//TODO
-		console.log("todo : remove Criteria");
+	function removeCriteria(id: number) {
+		const previousCriteriasArray = [...$topics];
+		previousCriteriasArray.splice(id, 1)
+		const newCriteriasArray = previousCriteriasArray.map((t, index) => ({...t, id: index }))
+		
+		criterias.set(newCriteriasArray)
 	}
 	
 
@@ -62,7 +68,7 @@
 				<td></td>
 				<td></td>
 				{#each $criterias as criteria (criteria.id)}
-					<td class="col-close-col"><button on:click={removeCriteria} class="close-col">x</button></td>
+					<td class="col-close-col"><button on:click={() => removeCriteria(criteria.id)} class="close-col">x</button></td>
 				{/each}
 				<td></td>
 				<td></td>
@@ -78,17 +84,19 @@
 				<td class="col-result">/10</td>
 			</tr>
 		</thead>
+
 		<tbody>
+
 			{#each $topics as topito (topito.id)}
 			<tr class="tr">
-					<td class="col-close-row"><button on:click={removeTopic} class="close">x</button></td>
+					<td class="col-close-row"><button on:click={() => removeTopic(topito.id)} class="close">x</button></td>
 					<td><Tier letter={$tierLabels[$tierLabels.length-1-topito.average]} tierClass={tierClassFromAverage(topito.average)}/></td>
 					<td class="col-topic"><div contenteditable bind:innerHTML={topito.label}>{topito.label}</div></td>
 					{#each $criterias as criteria} 
 						<td class="col-criteria"><div contenteditable></div></td>
 					{/each}
 					<td></td>
-					<td>{topito.average}</td>
+					<td>{$averagesTopics}</td>
 				</tr>
 			{/each}
 		</tbody>
